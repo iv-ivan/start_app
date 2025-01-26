@@ -1,0 +1,38 @@
+mkdir -p .github/workflows
+
+vim .github/workflows/test.yml
+```
+name: Run pytest on PullRequests to master
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Ruff lint check
+        run: ruff check .
+
+      - name: Ruff formatting check
+        run: ruff format . --check
+
+      - name: Run tests
+        run: pytest
+```
+
+If you create a PR, you will see pytest checks
