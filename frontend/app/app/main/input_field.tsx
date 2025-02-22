@@ -9,7 +9,7 @@ export function InputField() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`${LOCALHOST}/items/1?q=${encodeURIComponent(query)}`);
+      const res = await fetch(`${URL}/items/1?q=${encodeURIComponent(query)}`);
       if (!res.ok) {
         setResponse(`${res.status}`);
         return;
