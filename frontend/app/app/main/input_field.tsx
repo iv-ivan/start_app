@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const URL = "https://DOMAIN";
+const URL = "https://api.DOMAIN";
 const LOCALHOST = "http://127.0.0.1:8000";
 
 export function InputField() {
@@ -9,7 +9,7 @@ export function InputField() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`${LOCALHOST}/items/1?q=${encodeURIComponent(query)}`);
+      const res = await fetch(`${URL}/items/1?q=${encodeURIComponent(query)}`);
       if (!res.ok) {
         setResponse(`${res.status}`);
         return;
