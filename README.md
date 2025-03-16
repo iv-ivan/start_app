@@ -20,7 +20,7 @@ This is a MVP (Minimal Viable Product) with all the essential parts like CI, IaC
 
 ### Result
 
-<img width="600" alt="Screenshot 2025-02-22 at 21 09 40" src="https://github.com/user-attachments/assets/4d4bb9d6-3013-4ffb-bf95-3f55635dbad5" />
+<img width="554" alt="Screenshot 2025-03-16 at 18 31 37" src="https://github.com/user-attachments/assets/97c0d016-9271-48a6-b484-b4cf2572f70e" />
 
 ## HowTo
 
