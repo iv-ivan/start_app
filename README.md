@@ -19,8 +19,9 @@ The resulting app contains:
 This is a MVP (Minimal Viable Product) with all the essential parts like CI, IaC, backend/frontend/mobile etc. You can build anything starting from this template. 
 
 ### Result
-
-<img width="554" alt="Screenshot 2025-03-16 at 18 31 37" src="https://github.com/user-attachments/assets/97c0d016-9271-48a6-b484-b4cf2572f70e" />
+| Web  | Mobile  |
+|------|--------|
+| <img width="500" alt="Screenshot 2025-03-16 at 18 31 37" src="https://github.com/user-attachments/assets/97c0d016-9271-48a6-b484-b4cf2572f70e" />| <img width="300" alt="Screenshot 2025-03-05 at 20 30 19" src="https://github.com/user-attachments/assets/1648bb37-a727-40bb-9de3-95c7767508a8" />|
 
 ## HowTo
 
