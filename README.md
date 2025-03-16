@@ -18,6 +18,10 @@ The resulting app contains:
 
 This is a MVP (Minimal Viable Product) with all the essential parts like CI, IaC, backend/frontend/mobile etc. You can build anything starting from this template. 
 
+### Result
+
+<img width="865" alt="Screenshot 2025-02-22 at 21 09 40" src="https://github.com/user-attachments/assets/4d4bb9d6-3013-4ffb-bf95-3f55635dbad5" />
+
 ## HowTo
 
 The `main` branch contains 9 commits, 1 per step. 
