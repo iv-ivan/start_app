@@ -10,6 +10,7 @@ from aws_cdk import (
     aws_cloudfront,
     aws_cloudfront_origins,
     Duration,
+    aws_secretsmanager,
 )
 from constructs import Construct
 
@@ -62,6 +63,12 @@ class ApiStack(Stack):
             self, "MyEcrRepo", "my_docker_repo"
         )
 
+        mongo_secret = aws_secretsmanager.Secret.from_secret_name_v2(
+            self,
+            "MongoSecret",
+            "mongo_connection",  # The name of your secret in AWS Secrets Manager
+        )
+
         # Add a container to run in each task using our ECR image
         container = task_definition.add_container(
             "Container",
@@ -78,6 +85,9 @@ class ApiStack(Stack):
                 retries=3,  # Mark unhealthy after 3 failures
                 start_period=Duration.seconds(10),  # Grace period after startup
             ),
+            secrets={
+                "MONGO_CONNECTION": aws_ecs.Secret.from_secrets_manager(mongo_secret)
+            },
         )
 
         # Expose container port 80 (http)
