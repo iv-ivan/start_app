@@ -1,12 +1,13 @@
 from typing import Optional
-from fastapi import FastAPI, Depends, HTTPException, status
-from pydantic import BaseModel, EmailStr
+from fastapi import FastAPI, Depends, HTTPException, status, Response, Cookie
+from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 from create_collections import MONGO_ADDRESS, DB_NAME
 import pymongo
 import bcrypt
-from models import User, UserInput
+from bson.objectid import ObjectId
+from models import User, UserInput, UserResponse
 
 
 ### Mongo
@@ -99,3 +100,61 @@ async def create_user(
 
     await db.users.insert_one(user_doc.model_dump())
     return {"status": "Ok"}
+
+
+@app.post("/api/login")
+async def login(
+    user_data: UserInput,
+    response: Response,
+    db_client: AsyncIOMotorClient = Depends(get_database),
+):
+    db = db_client[DB_NAME]
+    user_doc = await db.users.find_one({"email": user_data.email})
+    if user_doc is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="No such email registered"
+        )
+    user = User(**user_doc)
+
+    stored_hash = user.passwordHash
+    is_valid = bcrypt.checkpw(user_data.password.encode(), stored_hash)
+
+    if not is_valid:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password"
+        )
+
+    response.set_cookie(
+        key="user_id", httponly=True, secure=True, value=user_doc["_id"]
+    )
+    # Next steps: return session_id instead of user_id
+    # response.set_cookie(key="session_id", httponly=True, secure=True, value="")
+    return UserResponse(email=user.email)
+
+
+@app.post("/api/logout")
+async def logout(response: Response):
+    # Next steps: cleanup session_id and record in sessions collection
+    response.delete_cookie("user_id")
+    return {"status": "Ok"}
+
+
+@app.post("/api/auth")
+async def check_auth(
+    user_id: Optional[str] = Cookie(default=None),
+    db_client: AsyncIOMotorClient = Depends(get_database),
+):
+    # Next steps: check session in sessions collection
+    db = db_client[DB_NAME]
+    if not ObjectId.is_valid(user_id):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="user_id is invalid"
+        )
+    user_doc = await db.users.find_one({"_id": ObjectId(user_id)})
+    if user_doc is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="No such email registered"
+        )
+    user = User(**user_doc)
+
+    return UserResponse(email=user.email)

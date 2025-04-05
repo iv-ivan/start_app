@@ -9,3 +9,7 @@ class User(BaseModel):
 class UserInput(BaseModel):
     email: EmailStr
     password: str
+
+
+class UserResponse(BaseModel):
+    email: EmailStr
