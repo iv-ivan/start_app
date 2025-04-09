@@ -1,7 +1,5 @@
 import { useState } from "react";
-
-const URL = "https://api.DOMAIN";
-const LOCALHOST = "http://127.0.0.1:8000";
+import { URL } from './cfg';
 
 export function InputField() {
   const [query, setQuery] = useState("");

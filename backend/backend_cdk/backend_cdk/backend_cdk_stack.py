@@ -208,17 +208,26 @@ class CloudfrontStack(Stack):
                 cache_policy=aws_cloudfront.CachePolicy.CACHING_DISABLED,  # the most dummy approach
                 origin_request_policy=aws_cloudfront.OriginRequestPolicy.ALL_VIEWER,  # pass everything (headers, query params)
                 response_headers_policy=aws_cloudfront.ResponseHeadersPolicy(
+                    # access_control_allow_credentials=True forces us to explicitly define other CORS params
                     self,
                     "CORS",
                     cors_behavior=aws_cloudfront.ResponseHeadersCorsBehavior(
-                        access_control_allow_credentials=False,
-                        access_control_allow_headers=["*"],
-                        access_control_allow_methods=["ALL"],
+                        access_control_allow_credentials=True,
+                        access_control_allow_headers=["Cookie", "Content-Type"], # In real world we probably need more
+                        access_control_allow_methods=[
+                            "POST",
+                            "GET",
+                            "HEAD",
+                            "PUT",
+                            "PATCH",
+                            "DELETE",
+                            "OPTIONS",
+                        ],
                         access_control_allow_origins=[
                             f"https://{DOMAIN}",
                             f"https://www.{DOMAIN}",
                         ],
-                        access_control_expose_headers=["*"],
+                        access_control_expose_headers=[],
                         access_control_max_age=Duration.seconds(60 * 10),
                         origin_override=True,
                     ),
@@ -229,6 +238,7 @@ class CloudfrontStack(Stack):
                 ),
                 viewer_protocol_policy=aws_cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
             ),
+            additional_behaviors={},
             domain_names=[full_ext_name],
             certificate=certificate,
         )

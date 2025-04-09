@@ -11,6 +11,8 @@ import secrets
 import datetime
 from fastapi.responses import JSONResponse
 
+DOMAIN = "YOUR_DOMAIN"
+
 
 ### Mongo
 class DataBase:
@@ -45,11 +47,17 @@ class ItemResponse(BaseModel):
 
 app = FastAPI()
 
+# We need CORS headers for localhost development.
+#
+# In AWS CORS headers are added in Cloudfront, but OPTIONS requests still go to server by default
+# That's why we must set DOMAIN here too, or handle OPTIONS at Cloudfront
 origins = [
     "http://localhost:5173/",
     "http://localhost:5173",
     "localhost:5173",
     "localhost:5173/",
+    f"https://{DOMAIN}",
+    f"https://www.{DOMAIN}",
 ]
 
 app.add_middleware(
